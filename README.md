@@ -15,7 +15,7 @@ The code for lesson 6 quizzes is within the udacity-platform stored: https://www
 3. A text file containing a link to the map position you wrangled in your project, a short description of the area and a reason for your choice.
 
 The map position who was wrangled is within the bounds-tag stored:
-'<bounds minlat="49.7586" minlon="7.584" maxlat="49.8895" maxlon="7.9033"/>'
+&lt;bounds minlat="49.7586" minlon="7.584" maxlat="49.8895" maxlon="7.9033"&gt;
 It is also exported to the json-file 'P3_Meddersheim_Germany' (available as zip): https://github.com/anitaweck/data_analyst/blob/master/P3_Meddersheim_Germany.zip).
 
 The area was chosen because it is my home region and I wanted to know how it is described in OSM. Also to see what kind of information might be missing.
