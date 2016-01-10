@@ -40,26 +40,58 @@ def read_file(street_map_file):
             dic_tag[element.tag] = 1
         if el != {}:
             #set german characters is readable
-            json_data = json.dumps(el, ensure_ascii = False, indent = 2).encode('utf8') +"\n"
+            json_data = json.dumps(el, indent = 2) +"\n"
+            #print json_data
             json_data_array.append(json_data)
     users = set(users)
-    pprint.pprint("0. Size of original file from OSM [MB]:")
-    pprint.pprint(file_orig_size/1000000) #get size of file in [MB]
+    f = open("P3_Meddersheim_Germany",'w')
+    f.writelines(json_data_array)
+    f.close()
+    file_json = os.stat(f.name) #get statistical information from dataset
+    file_size = float(file_json.st_size) #get file size
+    pprint.pprint("0.1 Size of original file from OSM [MB]:")
+    pprint.pprint(file_orig_size/1000000) #get size of the original file in [MB]
+    pprint.pprint("0.2 Size of json file from OSM [MB]:")
+    pprint.pprint(file_size/1000000) #get size of the original file in [MB]
     pprint.pprint("1. Number of nodes, ways and other data:")
     pprint.pprint(dic_tag)
     pprint.pprint("2. Number if unique users:")
     pprint.pprint(len(users))
-    f = open("P3_Meddersheim_Germany",'w')
-    f.writelines(json_data_array)
-    f.close()
     return f, dic_tag, users
 
 #separate definition in case 'addr:' is available in different data types
 def address_element(child_name, child):
+    child_content_new = None
     child_name = child_name.replace("addr:","")
     child_name = child_name.split(":")
     if len(child_name)<2:
         add_address[child_name[0]] = child.get('v')
+    elif len(child_name)>1:
+        add_address[child_name[1]] = child.get('v')   
+    #pattern definitions for wrangling address contents
+    p_wrangle = re.compile("(?=hein$)", re.IGNORECASE)
+    p_bad = re.compile("bad")
+    p_line = re.compile("\w-\w")
+    p_street = re.compile("strasse")
+    # conistent street naming, use always german characters
+    if child_name[0] == "street":
+        if re.search(p_street,child.get('v')) != None:
+            child_content = child.get('v')
+            child_content_new = child_content.replace("strasse", "straße")
+            add_address["street"] = child_content_new
+    # correct city names spelling mistakes, sensitive style and consistent hyphen whitespacing
+    if child_name[0] == "city":
+        if re.search(p_wrangle,child.get('v')) != None:
+            child_content = child.get('v')
+            child_content_new = child_content.replace("hein", "heim")
+        elif re.search(p_bad,child.get('v')) != None:
+            child_content = child.get('v')
+            child_content_new = child_content.replace("bad", "Bad")
+        elif re.search(p_line, child.get('v')) != None:
+            child_content = child.get('v')
+            child_content_new = child_content.replace("-"," - ") 
+        if child_content_new != None:
+            add_address["city"] = child_content_new
     return add_address
 
 def shape_element(element):
@@ -91,6 +123,7 @@ def shape_element(element):
     for child in element:
         child_name = child.get('k')
         p = re.compile('openGeoDB:', re.IGNORECASE)
+        
         #put data in an array, because it is a list of descriptive location
         if child_name == "is_in":
             is_in = child.get('v').split(',')
@@ -174,7 +207,7 @@ def get_db():
     from pymongo import MongoClient
     client = MongoClient('localhost',27017)
     #print client
-    db = client['test']
+    db = client['DW_P3_OSM_after']
     coll = db.P3_Meddersheim_Germany
     return db
  
