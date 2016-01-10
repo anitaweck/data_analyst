@@ -5,9 +5,13 @@ Part: Data Wrangling Project 3 - OpenStreetMap data 'Meddersheim and surrounding
 
 1. A pdf document containing your answers to the rubric questions. This file should document your data wrangling process.
 
+<<<<<<< HEAD
 Updated: The questions are answered within the html-document: https://github.com/anitaweck/data_analyst/blob/master/DW_P3_OSM.html
 
 Old: The rubric questions are answered in in the uploaded iPhyton Notebook. This is the link: https://github.com/anitaweck/data_analyst/blob/master/DW_P3_OSM.ipynb
+=======
+The rubric questions are answered in in the uploaded iPhyton Notebook. This is the link: https://github.com/anitaweck/data_analyst/blob/master/DW_P3_OSM.ipynb
+>>>>>>> master
 
 2. Your Python code for Lesson 6 quizzes, as well as any additional code you used in auditing and cleaning your dataset for the final project.
 
