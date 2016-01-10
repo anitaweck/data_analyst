@@ -174,7 +174,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Statistical-Overview-about-chosen-dataset-from-selected-OSMF-(Open-Street-Map-File)---'Meddersheim-and-surrounding-area':">Statistical Overview about chosen dataset from selected OSMF (Open Street Map File) - 'Meddersheim and surrounding area':<a class="anchor-link" href="#Statistical-Overview-about-chosen-dataset-from-selected-OSMF-(Open-Street-Map-File)---'Meddersheim-and-surrounding-area':">&#182;</a></h1>
+<h1 id="OpenStreetMap-Sample-Project---Data-Wrangling-with-MongoDB">OpenStreetMap Sample Project - Data Wrangling with MongoDB<a class="anchor-link" href="#OpenStreetMap-Sample-Project---Data-Wrangling-with-MongoDB">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -183,410 +183,8 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<ol>
-<li>Size of original file</li>
-<li>Number of nodes, ways and other data</li>
-<li>Number of unique users </li>
-</ol>
+<p>Anita Weck (Map Area: District Bad Kreuznach - Rhinelande Palatinate - Germany</p>
 
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="c"># -*- coding: utf-8 -*-</span>
-<span class="c"># get original file size from exported file &quot;Meddersheim_Bad-Muenster_Bad-Kreuznach_original&quot;</span>
-<span class="c"># get number of data tags from exported file &quot;Meddersheim_Bad-Muenster_Bad-Kreuznach_original&quot;</span>
-<span class="c"># get number of unique users for this dataset</span>
-<span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">Created on Dec 6, 2015</span>
-
-<span class="sd">@author: anita</span>
-<span class="sd">&#39;&#39;&#39;</span>
-
-<span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="kn">as</span> <span class="nn">ET</span>
-<span class="kn">import</span> <span class="nn">pprint</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">stat</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="n">street_map_file</span> <span class="o">=</span> <span class="s">&quot;Meddersheim_Bad-Muenster_Bad-Kreuznach_original&quot;</span>
-    
-<span class="k">def</span> <span class="nf">read_file</span><span class="p">(</span><span class="n">street_map_file</span><span class="p">):</span>
-    <span class="n">dic_tag</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">users</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">file_orig</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">street_map_file</span><span class="p">)</span> <span class="c">#get statistical information from dataset</span>
-    <span class="n">file_orig_size</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">file_orig</span><span class="o">.</span><span class="n">st_size</span><span class="p">)</span> <span class="c">#get file size</span>
-    <span class="k">for</span> <span class="n">event</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">ET</span><span class="o">.</span><span class="n">iterparse</span><span class="p">(</span><span class="n">street_map_file</span><span class="p">):</span>
-        <span class="c"># get user IDs</span>
-        <span class="n">uid</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;uid&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">uid</span> <span class="o">!=</span><span class="bp">None</span><span class="p">:</span>
-            <span class="n">users</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">uid</span><span class="p">)</span>
-        <span class="c"># count xml-tags</span>
-        <span class="k">if</span> <span class="n">dic_tag</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">tag</span><span class="p">):</span>
-            <span class="n">dic_tag</span><span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="n">dic_tag</span><span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">dic_tag</span><span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">users</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">users</span><span class="p">)</span>
-    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="s">&quot;0. Size of original file from OSM [MB]:&quot;</span><span class="p">)</span>
-    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">file_orig_size</span><span class="o">/</span><span class="mi">1000000</span><span class="p">)</span> <span class="c">#get size of file in [MB]</span>
-    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="s">&quot;1. Number of nodes, ways and other data:&quot;</span><span class="p">)</span>
-    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">dic_tag</span><span class="p">)</span>
-    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="s">&quot;2. Number if unique users:&quot;</span><span class="p">)</span>
-    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">dic_tag</span><span class="p">,</span> <span class="n">users</span>
-
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">read_file</span><span class="p">(</span><span class="n">street_map_file</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>&apos;Size of original file from OSM [MB]:&apos;
-50.786579
-&apos;Number of nodes, ways and other data:&apos;
-{&apos;bounds&apos;: 1,
- &apos;member&apos;: 24704,
- &apos;meta&apos;: 1,
- &apos;nd&apos;: 291833,
- &apos;node&apos;: 218983,
- &apos;note&apos;: 1,
- &apos;osm&apos;: 1,
- &apos;relation&apos;: 682,
- &apos;tag&apos;: 94015,
- &apos;way&apos;: 35578}
-&apos;Number if unique users:&apos;
-484
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<ol>
-<li>Call query for getting wineries from OpenStreetMap-data</li>
-<li>Number of chosen types of nodes</li>
-</ol>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span class="kn">import</span> <span class="nn">pprint</span>
-<span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">MongoClient</span>
-
-<span class="k">def</span> <span class="nf">get_db</span><span class="p">():</span>    
-    <span class="n">client</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="s">&#39;localhost&#39;</span><span class="p">,</span><span class="mi">27017</span><span class="p">)</span>
-    <span class="n">db</span> <span class="o">=</span> <span class="n">client</span><span class="p">[</span><span class="s">&#39;test&#39;</span><span class="p">]</span>
-    <span class="n">coll</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">P3_Meddersheim_Germany</span>
-    <span class="k">return</span> <span class="n">db</span>
-
-<span class="c">#getting wineries </span>
-<span class="k">def</span> <span class="nf">range_query</span><span class="p">():</span>
-    <span class="n">query</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;tag.shop&quot;</span><span class="p">:</span><span class="s">&quot;winery&quot;</span><span class="p">}</span>
-    <span class="k">return</span> <span class="n">query</span>
-    
-<span class="c">#getting types of nodes  </span>
-<span class="k">def</span> <span class="nf">make_pipeline</span><span class="p">():</span>
-    <span class="n">pipeline</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="c">#count types of nodes and get them</span>
-    <span class="n">pipeline</span> <span class="o">=</span> <span class="p">[{</span><span class="s">&quot;$match&quot;</span><span class="p">:{</span><span class="s">&quot;type&quot;</span><span class="p">:</span><span class="s">&quot;node&quot;</span><span class="p">,</span><span class="s">&quot;type&quot;</span><span class="p">:{</span><span class="s">&quot;$ne&quot;</span><span class="p">:</span><span class="bp">None</span><span class="p">},</span><span class="s">&quot;tag.amenity&quot;</span><span class="p">:{</span><span class="s">&quot;$ne&quot;</span><span class="p">:</span><span class="bp">None</span><span class="p">}}},</span>
-                <span class="p">{</span><span class="s">&quot;$group&quot;</span><span class="p">:{</span><span class="s">&quot;_id&quot;</span><span class="p">:</span><span class="s">&quot;$tag.amenity&quot;</span><span class="p">,</span><span class="s">&quot;count&quot;</span><span class="p">:{</span><span class="s">&quot;$sum&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}},</span>
-                <span class="p">{</span><span class="s">&quot;$sort&quot;</span><span class="p">:{</span><span class="s">&quot;count&quot;</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">}}]</span>
-    <span class="c">#alternative pipeline for checking which type is the right one</span>
-    <span class="c">#pipeline = [{&quot;$match&quot;:{&quot;openGeoDB.type&quot;:{&quot;$ne&quot;:None}}},</span>
-    <span class="c">#            {&quot;$group&quot;:{&quot;_id&quot;:&quot;$openGeoDB.type&quot;,&quot;count&quot;:{&quot;$sum&quot;:1}}},</span>
-    <span class="c">#            {&quot;$sort&quot;:{&quot;count&quot;:-1}}]</span>
-    <span class="c">#print pipeline</span>
-    <span class="k">return</span> <span class="n">pipeline</span>
-
-<span class="k">def</span> <span class="nf">osm_sources</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">doc</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">db</span><span class="o">.</span><span class="n">P3_Meddersheim_Germany</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">pipeline</span><span class="p">)]</span>
-
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="c">#read_file(street_map_file)</span>
-    <span class="n">db</span> <span class="o">=</span> <span class="n">get_db</span><span class="p">()</span>
-    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">()</span>
-    <span class="n">query</span> <span class="o">=</span> <span class="n">range_query</span><span class="p">()</span>
-    <span class="n">result_id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">P3_Meddersheim_Germany</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">osm_sources</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">result_id</span><span class="p">:</span>
-        <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>{u&apos;_id&apos;: ObjectId(&apos;5686ecf1cf4e09e2ffdb0808&apos;),
- u&apos;address&apos;: {u&apos;city&apos;: u&apos;Monzingen&apos;,
-              u&apos;country&apos;: u&apos;DE&apos;,
-              u&apos;housenumber&apos;: u&apos;23&apos;,
-              u&apos;postcode&apos;: u&apos;55569&apos;,
-              u&apos;street&apos;: u&apos;Soonwaldstra\xdfe&apos;},
- u&apos;contact&apos;: {u&apos;fax&apos;: u&apos;+49 6751 94705&apos;, u&apos;phone&apos;: u&apos;+49 6751 3847&apos;},
- u&apos;created&apos;: {u&apos;changeset&apos;: u&apos;13478987&apos;,
-              u&apos;timestamp&apos;: u&apos;2012-10-13T13:23:36Z&apos;,
-              u&apos;uid&apos;: u&apos;39424&apos;,
-              u&apos;user&apos;: u&apos;atressel&apos;,
-              u&apos;version&apos;: u&apos;7&apos;},
- u&apos;id&apos;: u&apos;385151392&apos;,
- u&apos;pos&apos;: [49.8019191, 7.5910752],
- u&apos;tag&apos;: {u&apos;landuse&apos;: u&apos;farmyard&apos;,
-          u&apos;name&apos;: u&apos;Weingut Jaeger&apos;,
-          u&apos;shop&apos;: u&apos;winery&apos;,
-          u&apos;tourism&apos;: u&apos;wine_cellar&apos;},
- u&apos;type&apos;: u&apos;node&apos;}
-{u&apos;_id&apos;: ObjectId(&apos;5686ecf1cf4e09e2ffdb2fa2&apos;),
- u&apos;created&apos;: {u&apos;changeset&apos;: u&apos;4214878&apos;,
-              u&apos;timestamp&apos;: u&apos;2010-03-23T18:51:38Z&apos;,
-              u&apos;uid&apos;: u&apos;234214&apos;,
-              u&apos;user&apos;: u&apos;Anubis85&apos;,
-              u&apos;version&apos;: u&apos;1&apos;},
- u&apos;id&apos;: u&apos;672850551&apos;,
- u&apos;pos&apos;: [49.8228991, 7.8193516],
- u&apos;tag&apos;: {u&apos;name&apos;: u&apos;Weingut Pleitz&apos;,
-          u&apos;shop&apos;: u&apos;winery&apos;,
-          u&apos;tourism&apos;: u&apos;wine_cellar&apos;},
- u&apos;type&apos;: u&apos;node&apos;}
-{u&apos;_id&apos;: ObjectId(&apos;5686ecf2cf4e09e2ffdb4416&apos;),
- u&apos;address&apos;: {u&apos;city&apos;: u&apos;Monzingen&apos;,
-              u&apos;country&apos;: u&apos;DE&apos;,
-              u&apos;housenumber&apos;: u&apos;12&apos;,
-              u&apos;postcode&apos;: u&apos;55569&apos;,
-              u&apos;street&apos;: u&apos;R\xf6merstra\xdfe&apos;},
- u&apos;contact&apos;: {u&apos;email&apos;: u&apos;weingut-schauss@web.de&apos;,
-              u&apos;fax&apos;: u&apos;+49 6751 6860&apos;,
-              u&apos;phone&apos;: u&apos;+49 6751 2882&apos;,
-              u&apos;website&apos;: u&apos;http://www.weingut-schauss.de&apos;},
- u&apos;created&apos;: {u&apos;changeset&apos;: u&apos;13478827&apos;,
-              u&apos;timestamp&apos;: u&apos;2012-10-13T13:08:53Z&apos;,
-              u&apos;uid&apos;: u&apos;39424&apos;,
-              u&apos;user&apos;: u&apos;atressel&apos;,
-              u&apos;version&apos;: u&apos;6&apos;},
- u&apos;id&apos;: u&apos;835588154&apos;,
- u&apos;pos&apos;: [49.8011835, 7.5894586],
- u&apos;tag&apos;: {u&apos;landuse&apos;: u&apos;farmyard&apos;,
-          u&apos;name&apos;: u&apos;Weingut Schau\xdf&apos;,
-          u&apos;shop&apos;: u&apos;winery&apos;,
-          u&apos;tourism&apos;: u&apos;wine_cellar&apos;},
- u&apos;type&apos;: u&apos;node&apos;}
-{u&apos;_id&apos;: ObjectId(&apos;5686ecf4cf4e09e2ffdc0b0b&apos;),
- u&apos;address&apos;: {u&apos;city&apos;: u&apos;Monzingen&apos;,
-              u&apos;country&apos;: u&apos;DE&apos;,
-              u&apos;housename&apos;: u&apos;Living Room&apos;,
-              u&apos;housenumber&apos;: u&apos;10a&apos;,
-              u&apos;postcode&apos;: u&apos;55569&apos;,
-              u&apos;street&apos;: u&apos;Soonwaldstra\xdfe&apos;},
- u&apos;contact&apos;: {u&apos;email&apos;: u&apos;weingut@emrich-schoenleber.com&apos;,
-              u&apos;fax&apos;: u&apos;+49 6751 4864&apos;,
-              u&apos;phone&apos;: u&apos;+49 6751 2733&apos;,
-              u&apos;website&apos;: u&apos;http://www.emrich-schoenleber.de&apos;},
- u&apos;created&apos;: {u&apos;changeset&apos;: u&apos;13478827&apos;,
-              u&apos;timestamp&apos;: u&apos;2012-10-13T13:08:52Z&apos;,
-              u&apos;uid&apos;: u&apos;39424&apos;,
-              u&apos;user&apos;: u&apos;atressel&apos;,
-              u&apos;version&apos;: u&apos;5&apos;},
- u&apos;id&apos;: u&apos;1415935208&apos;,
- u&apos;pos&apos;: [49.7969803, 7.5899494],
- u&apos;tag&apos;: {u&apos;landuse&apos;: u&apos;farmyard&apos;,
-          u&apos;name&apos;: u&apos;Weingut Emrich-Sch\xf6nleber&apos;,
-          u&apos;shop&apos;: u&apos;winery&apos;,
-          u&apos;tourism&apos;: u&apos;wine_cellar&apos;},
- u&apos;type&apos;: u&apos;node&apos;}
-{u&apos;_id&apos;: ObjectId(&apos;5686ecf4cf4e09e2ffdc0b0c&apos;),
- u&apos;address&apos;: {u&apos;city&apos;: u&apos;Monzingen&apos;,
-              u&apos;country&apos;: u&apos;DE&apos;,
-              u&apos;housename&apos;: u&apos;Living Room&apos;,
-              u&apos;housenumber&apos;: u&apos;34&apos;,
-              u&apos;postcode&apos;: u&apos;55569&apos;,
-              u&apos;street&apos;: u&apos;Soonwaldstra\xdfe&apos;},
- u&apos;contact&apos;: {u&apos;email&apos;: u&apos;weingut.heinrich@t-online.de&apos;,
-              u&apos;fax&apos;: u&apos;+49 6751 950731&apos;,
-              u&apos;phone&apos;: u&apos;+49 6751 2151&apos;,
-              u&apos;website&apos;: u&apos;http://www.weingutheinrich.de&apos;},
- u&apos;created&apos;: {u&apos;changeset&apos;: u&apos;13478987&apos;,
-              u&apos;timestamp&apos;: u&apos;2012-10-13T13:23:36Z&apos;,
-              u&apos;uid&apos;: u&apos;39424&apos;,
-              u&apos;user&apos;: u&apos;atressel&apos;,
-              u&apos;version&apos;: u&apos;4&apos;},
- u&apos;id&apos;: u&apos;1415935210&apos;,
- u&apos;pos&apos;: [49.8032976, 7.5904476],
- u&apos;tag&apos;: {u&apos;landuse&apos;: u&apos;farmyard&apos;,
-          u&apos;name&apos;: u&apos;Weingut Heinrich&apos;,
-          u&apos;shop&apos;: u&apos;winery&apos;,
-          u&apos;tourism&apos;: u&apos;wine_cellar&apos;},
- u&apos;type&apos;: u&apos;node&apos;}
-{u&apos;_id&apos;: ObjectId(&apos;5686ecf4cf4e09e2ffdc0b0d&apos;),
- u&apos;address&apos;: {u&apos;city&apos;: u&apos;Monzingen&apos;,
-              u&apos;country&apos;: u&apos;DE&apos;,
-              u&apos;housename&apos;: u&apos;Living Room&apos;,
-              u&apos;housenumber&apos;: u&apos;41&apos;,
-              u&apos;postcode&apos;: u&apos;55569&apos;,
-              u&apos;street&apos;: u&apos;Soonwaldstra\xdfe&apos;},
- u&apos;contact&apos;: {u&apos;email&apos;: u&apos;info@weingut-udo-weber.de&apos;,
-              u&apos;fax&apos;: u&apos;+49 6751 2076&apos;,
-              u&apos;phone&apos;: u&apos;+49 6751 3278&apos;,
-              u&apos;website&apos;: u&apos;http://www.weingut-udo-weber.de&apos;},
- u&apos;created&apos;: {u&apos;changeset&apos;: u&apos;13478987&apos;,
-              u&apos;timestamp&apos;: u&apos;2012-10-13T13:23:36Z&apos;,
-              u&apos;uid&apos;: u&apos;39424&apos;,
-              u&apos;user&apos;: u&apos;atressel&apos;,
-              u&apos;version&apos;: u&apos;5&apos;},
- u&apos;id&apos;: u&apos;1415935217&apos;,
- u&apos;pos&apos;: [49.803987, 7.5891891],
- u&apos;tag&apos;: {u&apos;landuse&apos;: u&apos;farmyard&apos;,
-          u&apos;name&apos;: u&apos;Weingut Weber&apos;,
-          u&apos;shop&apos;: u&apos;winery&apos;,
-          u&apos;tourism&apos;: u&apos;wine_cellar&apos;},
- u&apos;type&apos;: u&apos;node&apos;}
-{u&apos;_id&apos;: ObjectId(&apos;5686ecf4cf4e09e2ffdc0c2b&apos;),
- u&apos;address&apos;: {u&apos;city&apos;: u&apos;Monzingen&apos;,
-              u&apos;country&apos;: u&apos;DE&apos;,
-              u&apos;housename&apos;: u&apos;Living Room&apos;,
-              u&apos;housenumber&apos;: u&apos;67&apos;,
-              u&apos;postcode&apos;: u&apos;55569&apos;,
-              u&apos;street&apos;: u&apos;Hauptstra\xdfe&apos;},
- u&apos;contact&apos;: {u&apos;email&apos;: u&apos;info@weingut-alt.de&apos;,
-              u&apos;phone&apos;: u&apos;+49 6751 94560&apos;,
-              u&apos;website&apos;: u&apos;www.weingut-alt.de&apos;},
- u&apos;created&apos;: {u&apos;changeset&apos;: u&apos;16517308&apos;,
-              u&apos;timestamp&apos;: u&apos;2013-06-11T23:06:44Z&apos;,
-              u&apos;uid&apos;: u&apos;461945&apos;,
-              u&apos;user&apos;: u&apos;poppei82&apos;,
-              u&apos;version&apos;: u&apos;6&apos;},
- u&apos;id&apos;: u&apos;1426340194&apos;,
- u&apos;pos&apos;: [49.8004004, 7.5912087],
- u&apos;tag&apos;: {u&apos;landuse&apos;: u&apos;farmyard&apos;,
-          u&apos;name&apos;: u&apos;Weingut Alt&apos;,
-          u&apos;shop&apos;: u&apos;winery&apos;,
-          u&apos;tourism&apos;: u&apos;attraction&apos;},
- u&apos;type&apos;: u&apos;node&apos;}
-{u&apos;_id&apos;: ObjectId(&apos;5686ecffcf4e09e2ffde163e&apos;),
- u&apos;created&apos;: {u&apos;changeset&apos;: u&apos;33053769&apos;,
-              u&apos;timestamp&apos;: u&apos;2015-08-02T18:16:35Z&apos;,
-              u&apos;uid&apos;: u&apos;104912&apos;,
-              u&apos;user&apos;: u&apos;Sir Lancelot&apos;,
-              u&apos;version&apos;: u&apos;1&apos;},
- u&apos;id&apos;: u&apos;3677884318&apos;,
- u&apos;pos&apos;: [49.865314, 7.810936],
- u&apos;tag&apos;: {u&apos;amenity&apos;: u&apos;pub&apos;, u&apos;name&apos;: u&apos;Weingut Heil&apos;, u&apos;shop&apos;: u&apos;winery&apos;},
- u&apos;type&apos;: u&apos;node&apos;}
-[{u&apos;_id&apos;: u&apos;bench&apos;, u&apos;count&apos;: 556},
- {u&apos;_id&apos;: u&apos;parking&apos;, u&apos;count&apos;: 405},
- {u&apos;_id&apos;: u&apos;restaurant&apos;, u&apos;count&apos;: 122},
- {u&apos;_id&apos;: u&apos;hunting_stand&apos;, u&apos;count&apos;: 101},
- {u&apos;_id&apos;: u&apos;place_of_worship&apos;, u&apos;count&apos;: 98},
- {u&apos;_id&apos;: u&apos;recycling&apos;, u&apos;count&apos;: 59},
- {u&apos;_id&apos;: u&apos;shelter&apos;, u&apos;count&apos;: 55},
- {u&apos;_id&apos;: u&apos;school&apos;, u&apos;count&apos;: 54},
- {u&apos;_id&apos;: u&apos;post_box&apos;, u&apos;count&apos;: 51},
- {u&apos;_id&apos;: u&apos;bank&apos;, u&apos;count&apos;: 45},
- {u&apos;_id&apos;: u&apos;kindergarten&apos;, u&apos;count&apos;: 33},
- {u&apos;_id&apos;: u&apos;fountain&apos;, u&apos;count&apos;: 30},
- {u&apos;_id&apos;: u&apos;telephone&apos;, u&apos;count&apos;: 28},
- {u&apos;_id&apos;: u&apos;fast_food&apos;, u&apos;count&apos;: 27},
- {u&apos;_id&apos;: u&apos;pub&apos;, u&apos;count&apos;: 27},
- {u&apos;_id&apos;: u&apos;cafe&apos;, u&apos;count&apos;: 27},
- {u&apos;_id&apos;: u&apos;fire_station&apos;, u&apos;count&apos;: 25},
- {u&apos;_id&apos;: u&apos;doctors&apos;, u&apos;count&apos;: 23},
- {u&apos;_id&apos;: u&apos;pharmacy&apos;, u&apos;count&apos;: 20},
- {u&apos;_id&apos;: u&apos;fuel&apos;, u&apos;count&apos;: 20},
- {u&apos;_id&apos;: u&apos;toilets&apos;, u&apos;count&apos;: 19},
- {u&apos;_id&apos;: u&apos;townhall&apos;, u&apos;count&apos;: 19},
- {u&apos;_id&apos;: u&apos;grave_yard&apos;, u&apos;count&apos;: 18},
- {u&apos;_id&apos;: u&apos;community_centre&apos;, u&apos;count&apos;: 18},
- {u&apos;_id&apos;: u&apos;social_facility&apos;, u&apos;count&apos;: 15},
- {u&apos;_id&apos;: u&apos;bbq&apos;, u&apos;count&apos;: 14},
- {u&apos;_id&apos;: u&apos;public_building&apos;, u&apos;count&apos;: 11},
- {u&apos;_id&apos;: u&apos;hospital&apos;, u&apos;count&apos;: 10},
- {u&apos;_id&apos;: u&apos;vending_machine&apos;, u&apos;count&apos;: 10},
- {u&apos;_id&apos;: u&apos;dentist&apos;, u&apos;count&apos;: 9},
- {u&apos;_id&apos;: u&apos;post_office&apos;, u&apos;count&apos;: 9},
- {u&apos;_id&apos;: u&apos;car_wash&apos;, u&apos;count&apos;: 8},
- {u&apos;_id&apos;: u&apos;atm&apos;, u&apos;count&apos;: 8},
- {u&apos;_id&apos;: u&apos;veterinary&apos;, u&apos;count&apos;: 7},
- {u&apos;_id&apos;: u&apos;bar&apos;, u&apos;count&apos;: 7},
- {u&apos;_id&apos;: u&apos;biergarten&apos;, u&apos;count&apos;: 7},
- {u&apos;_id&apos;: u&apos;swimming_pool&apos;, u&apos;count&apos;: 6},
- {u&apos;_id&apos;: u&apos;bicycle_parking&apos;, u&apos;count&apos;: 6},
- {u&apos;_id&apos;: u&apos;grit_bin&apos;, u&apos;count&apos;: 5},
- {u&apos;_id&apos;: u&apos;arts_centre&apos;, u&apos;count&apos;: 4},
- {u&apos;_id&apos;: u&apos;bus_station&apos;, u&apos;count&apos;: 3},
- {u&apos;_id&apos;: u&apos;courthouse&apos;, u&apos;count&apos;: 3},
- {u&apos;_id&apos;: u&apos;police&apos;, u&apos;count&apos;: 3},
- {u&apos;_id&apos;: u&apos;driving_school&apos;, u&apos;count&apos;: 3},
- {u&apos;_id&apos;: u&apos;library&apos;, u&apos;count&apos;: 3},
- {u&apos;_id&apos;: u&apos;waste_disposal&apos;, u&apos;count&apos;: 3},
- {u&apos;_id&apos;: u&apos;ferry_terminal&apos;, u&apos;count&apos;: 2},
- {u&apos;_id&apos;: u&apos;casino&apos;, u&apos;count&apos;: 2},
- {u&apos;_id&apos;: u&apos;clock&apos;, u&apos;count&apos;: 2},
- {u&apos;_id&apos;: u&apos;food_court&apos;, u&apos;count&apos;: 2},
- {u&apos;_id&apos;: u&apos;drinking_water&apos;, u&apos;count&apos;: 2},
- {u&apos;_id&apos;: u&apos;taxi&apos;, u&apos;count&apos;: 2},
- {u&apos;_id&apos;: u&apos;nursing_home&apos;, u&apos;count&apos;: 1},
- {u&apos;_id&apos;: u&apos;nightclub&apos;, u&apos;count&apos;: 1},
- {u&apos;_id&apos;: u&apos;community_center&apos;, u&apos;count&apos;: 1},
- {u&apos;_id&apos;: u&apos;sanitary_dump_station&apos;, u&apos;count&apos;: 1},
- {u&apos;_id&apos;: u&apos;baby_hatch&apos;, u&apos;count&apos;: 1},
- {u&apos;_id&apos;: u&apos;marketplace&apos;, u&apos;count&apos;: 1},
- {u&apos;_id&apos;: u&apos;bureau_de_change&apos;, u&apos;count&apos;: 1},
- {u&apos;_id&apos;: u&apos;cinema&apos;, u&apos;count&apos;: 1},
- {u&apos;_id&apos;: u&apos;emergency_service&apos;, u&apos;count&apos;: 1},
- {u&apos;_id&apos;: u&apos;waste_basket&apos;, u&apos;count&apos;: 1},
- {u&apos;_id&apos;: u&apos;car_rental&apos;, u&apos;count&apos;: 1},
- {u&apos;_id&apos;: u&apos;theatre&apos;, u&apos;count&apos;: 1},
- {u&apos;_id&apos;: u&apos;blood_donation&apos;, u&apos;count&apos;: 1},
- {u&apos;_id&apos;: u&apos;charging_station&apos;, u&apos;count&apos;: 1},
- {u&apos;_id&apos;: u&apos;ambulance_station&apos;, u&apos;count&apos;: 1},
- {u&apos;_id&apos;: u&apos;rescue_station&apos;, u&apos;count&apos;: 1},
- {u&apos;_id&apos;: u&apos;studio&apos;, u&apos;count&apos;: 1},
- {u&apos;_id&apos;: u&apos;parking_space&apos;, u&apos;count&apos;: 1},
- {u&apos;_id&apos;: u&apos;animal_shelter&apos;, u&apos;count&apos;: 1},
- {u&apos;_id&apos;: u&apos;brothel&apos;, u&apos;count&apos;: 1},
- {u&apos;_id&apos;: u&apos;winery&apos;, u&apos;count&apos;: 1}]
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Problems-encountered-in-your-map">Problems encountered in your map<a class="anchor-link" href="#Problems-encountered-in-your-map">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -595,7 +193,59 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Encode original xml-data in that way so that german characters are readable via setting 'utf8' encoding. The original py-file also defines '-<em>- coding: utf-8 -</em>-' at the beginning of the coding file. Then write the re-shaped data in json-Format in a file. Before 'shape_element' is called for re-shaping.</p>
+<p><a href="https://www.openstreetmap.org/#map=12/49.8241/7.7436">https://www.openstreetmap.org/#map=12/49.8241/7.7436</a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Problems-encountered-in-the-map">Problems encountered in the map<a class="anchor-link" href="#Problems-encountered-in-the-map">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>After downloading the open street map area of the district of Bad Kreuznach, shaping and importing it in MongoDB I realized the following problems:</p>
+<ul>
+<li>city names are doubled because of misspelled spelling letters (wrong 'hein' vs. correct 'heim'), different case styles (small letters vs. case-sensitive style), different style in using white spaces before and after a hyphen (wrong 'Bad Sobernheim-Steinhardt' vs. 'Bad Sobernheim - Steinhard; here also wrong naming of city district)</li>
+<li>inconsistent street names (wrong 'strasse' vs. correct 'straße) in german style of street naming</li>
+<li>german characters are not encoded correctly</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="City-names">City names<a class="anchor-link" href="#City-names">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Firstly the data are audited after reshaping the tags for MongoDB. By using the following aggregrate function the problems for city names above are encountered.</p>
 
 </div>
 </div>
@@ -605,23 +255,380 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre> <span class="k">for</span> <span class="n">event</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">ET</span><span class="o">.</span><span class="n">iterparse</span><span class="p">(</span><span class="n">street_map_file</span><span class="p">):</span>
-    <span class="c">#shape element (see below for what is done)</span>
-    <span class="n">el</span> <span class="o">=</span> <span class="n">shape_element</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">el</span> <span class="o">!=</span> <span class="p">{}:</span>
-        <span class="c">#set german characters is readable</span>
-        <span class="n">json_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">el</span><span class="p">,</span> <span class="n">ensure_ascii</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">indent</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf8&#39;</span><span class="p">)</span> <span class="o">+</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span>
-        <span class="n">json_data_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
-    <span class="c">#write re-shaped data in in json-file</span>
-    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;P3_Meddersheim_Germany&quot;</span><span class="p">,</span><span class="s">&#39;w&#39;</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">json_data_array</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<div class=" highlight hl-ipython2"><pre><span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">P3_Meddersheim_Germany</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([{</span><span class="s">&quot;$match&quot;</span><span class="p">:{</span><span class="s">&quot;address.city&quot;</span><span class="p">:{</span><span class="s">&quot;$exists&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}},{</span><span class="s">&quot;$group&quot;</span><span class="p">:{</span><span class="s">&quot;_id&quot;</span><span class="p">:</span><span class="s">&quot;$address.city&quot;</span><span class="p">}},{</span><span class="s">&quot;$sort&quot;</span><span class="p">:{</span><span class="s">&quot;_id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}])</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The problems look like this in the output:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><br>...</br>
+<br>{ "_id" : "Bad Kreuznach" }</br>
+<br>{ "_id" : "Bad Kreuznach - Rüdesheim" }</br>
+<br>{ "_id" : "Bad Münster" }</br>
+<br>{ "_id" : "Bad Münster am Stei<ins>n-E</ins>bernburg" }</br>
+<br>{ "_id" : "Bad Sobernheim" }</br>
+<br>{ "_id" : "Bad Sobernheim<ins> - </ins>Steinhard" }</br>
+<br>{ "_id" : "Bad Sobernhei<ins>m-S</ins>teinhardt" }</br>
+<br>{ "_id" : "Bad Sobernhei<ins>n</ins>" }</br>
+<br>...</br>
+<br>{ "_id" : "<ins>b</ins>ad Kreuznach" }</br></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="n">The</span> <span class="n">result</span> <span class="n">after</span> <span class="n">cleaning</span> <span class="n">looks</span> <span class="n">like</span> <span class="n">this</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">database</span> <span class="n">after</span> <span class="n">the</span> <span class="n">new</span> <span class="n">json</span><span class="o">-</span><span class="nb">file</span> <span class="ow">is</span> <span class="n">red</span> <span class="ow">in</span><span class="o">.</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><br>...</br>
+<br>{ "_id" : "Bad Kreuznach" }</br>
+<br>{ "_id" : "Bad Kreuznach - Rüdesheim" }</br>
+<br>{ "_id" : "Bad Münster" }</br>
+<br>{ "_id" : "Bad Münster am Stein - Ebernburg" }</br>
+<br>{ "_id" : "Bad Sobernheim" }</br>
+<br>{ "_id" : "Bad Sobernheim - Steinhard" }</br>
+<br>{ "_id" : "Bad Sobernheim - Steinhardt" }</br>
+<br>...</br></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The chosen way of cleaning these city names is done via defining a pattern and checking it against a regular expression.
+Therefor that very often the string 'hein' appears in this example osm-dataset (and in most cases is correct) a check for the this pattern at the end of string was made.
+The string 'bad' starts with a small letter, but should start with a capital letter (in this dataset 'bad' does not appear in another meaning that's why a check for only the beginning of a string with a whitespace was renounced).
+The last problem which was solved was the inconsistency in</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="c">#pattern definitions for wrangling address contents</span>
+<span class="n">p_wrangle</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&quot;(?=hein$)&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+<span class="n">p_bad</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&quot;bad&quot;</span><span class="p">)</span>
+<span class="n">p_line</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&quot;\w-\w&quot;</span><span class="p">)</span>
+<span class="c"># correct city names spelling mistakes, sensitive style and consistent hyphen whitespacing</span>
+<span class="k">if</span> <span class="n">child_name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;city&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">p_wrangle</span><span class="p">,</span><span class="n">child</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;v&#39;</span><span class="p">))</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">child_content</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;v&#39;</span><span class="p">)</span>
+        <span class="n">child_content_new</span> <span class="o">=</span> <span class="n">child_content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;hein&quot;</span><span class="p">,</span> <span class="s">&quot;heim&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">p_bad</span><span class="p">,</span><span class="n">child</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;v&#39;</span><span class="p">))</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">child_content</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;v&#39;</span><span class="p">)</span>
+        <span class="n">child_content_new</span> <span class="o">=</span> <span class="n">child_content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;bad&quot;</span><span class="p">,</span> <span class="s">&quot;Bad&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">p_line</span><span class="p">,</span> <span class="n">child</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;v&#39;</span><span class="p">))</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">child_content</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;v&#39;</span><span class="p">)</span>
+        <span class="n">child_content_new</span> <span class="o">=</span> <span class="n">child_content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;-&quot;</span><span class="p">,</span><span class="s">&quot; - &quot;</span><span class="p">)</span> 
+    <span class="k">if</span> <span class="n">child_content_new</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">add_address</span><span class="p">[</span><span class="s">&quot;city&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">child_content_new</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Street-names">Street names<a class="anchor-link" href="#Street-names">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>By auditing the database for a typical german mistake in street naming by the following aggregate function, using "$regex" for finding a string,</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">P3_Meddersheim_Germany</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([{</span><span class="s">&quot;$match&quot;</span><span class="p">:{</span><span class="s">&quot;address.street&quot;</span><span class="p">:{</span><span class="s">&quot;$regex&quot;</span><span class="p">:</span><span class="s">&quot;strasse&quot;</span><span class="p">}}},{</span><span class="s">&quot;$group&quot;</span><span class="p">:{</span><span class="s">&quot;_id&quot;</span><span class="p">:</span><span class="s">&quot;$address.street&quot;</span><span class="p">,</span><span class="s">&quot;count&quot;</span><span class="p">:{</span><span class="s">&quot;$sum&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}},{</span><span class="s">&quot;$sort&quot;</span><span class="p">:{</span><span class="s">&quot;_id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>shows that typical inconsistency:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>{ "_id" : "Winzerstra<ins>ss</ins>e", "count" : 1 }</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Versus the other correct street names:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">P3_Meddersheim_Germany_2</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([{</span><span class="s">&quot;$match&quot;</span><span class="p">:{</span><span class="s">&quot;address.street&quot;</span><span class="p">:{</span><span class="s">&quot;$regex&quot;</span><span class="p">:</span><span class="s">&quot;straße&quot;</span><span class="p">}}},{</span><span class="s">&quot;$group&quot;</span><span class="p">:{</span><span class="s">&quot;_id&quot;</span><span class="p">:</span><span class="s">&quot;$address.street&quot;</span><span class="p">,</span><span class="s">&quot;count&quot;</span><span class="p">:{</span><span class="s">&quot;$sum&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}},{</span><span class="s">&quot;$sort&quot;</span><span class="p">:{</span><span class="s">&quot;_id&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><br>{ "_id" : "Altmühlenstraße", "count" : 18 }</br>
+<br>{ "_id" : "Bachstraße", "count" : 18 }</br>
+<br>...</br></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The problem was solved via a consistent exchanging of the wrong string (pattern definition) with the correct string (containing the german letter 'ß') in the following way. A check was done with the aggregate function again, which does not bring back a result for the expression {"$regex":"strasse"}.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="c">#pattern definitions for wrangling address contents</span>
+<span class="n">p_street</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&quot;strasse&quot;</span><span class="p">)</span>
+<span class="c"># conistent street naming, use always german characters</span>
+<span class="k">if</span> <span class="n">child_name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;street&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">p_street</span><span class="p">,</span><span class="n">child</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;v&#39;</span><span class="p">))</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">print</span> <span class="n">child_name</span><span class="p">,</span> <span class="n">child</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;v&#39;</span><span class="p">)</span>
+        <span class="n">child_content</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;v&#39;</span><span class="p">)</span>
+        <span class="n">child_content_new</span> <span class="o">=</span> <span class="n">child_content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;strasse&quot;</span><span class="p">,</span> <span class="s">&quot;straße&quot;</span><span class="p">)</span>
+        <span class="k">print</span> <span class="n">p_wrangle</span><span class="p">,</span> <span class="n">child_content_new</span>
+        <span class="n">add_address</span><span class="p">[</span><span class="s">&quot;street&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">child_content_new</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This special character problem is solved with the coding definition explained in the following chapter.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Encoding-for-german-letters">Encoding for german letters<a class="anchor-link" href="#Encoding-for-german-letters">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To ensure the correct encoding of german letters (like 'ß') and to avoid and exception when executing the python-code</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="n">child_content_new</span> <span class="o">=</span> <span class="n">child_content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;strasse&quot;</span><span class="p">,</span> <span class="s">&quot;straße&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>the coding definition at the beginning of the py-file is necessary to ensure correct encoding for the json-object-file and compiling of the code.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="No-problems-are-found-in-the-postal-codes">No problems are found in the postal codes<a class="anchor-link" href="#No-problems-are-found-in-the-postal-codes">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The postcodes are correct and consistent at least for the included cities in the chosen map. This was checked with the following function.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">P3_Meddersheim_Germany_2</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([{</span><span class="s">&quot;$match&quot;</span><span class="p">:{</span><span class="s">&quot;address.postcode&quot;</span><span class="p">:{</span><span class="s">&quot;$exists&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}},{</span><span class="s">&quot;$group&quot;</span><span class="p">:{</span><span class="s">&quot;_id&quot;</span><span class="p">:</span><span class="s">&quot;$address.postcode&quot;</span><span class="p">,</span><span class="s">&quot;city&quot;</span><span class="p">:{</span><span class="s">&quot;$addToSet&quot;</span><span class="p">:</span><span class="s">&quot;$address.city&quot;</span><span class="p">}}},{</span><span class="s">&quot;$sort&quot;</span><span class="p">:{</span><span class="s">&quot;address.postcode&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><br>{ "_id" : "55450", "city" : [ "Bad Kreuznach - Rüdesheim", "Langenlonsheim" ] }</br>
+<br>{ "_id" : "55559", "city" : [ "Altenbamberg", "Bretzenheim" ] }</br>
+<br>{ "_id" : "55568", "city" : [ "Bad Kreuznach", "Bad Sobernheim", "Staudernheim" ] }</br>
+<br>{ "_id" : "67826", "city" : [ "Bad Kreuznach", "Hallgarten" ] }</br>
+<br>{ "_id" : "55571", "city" : [ "Bad Sobernheim", "Odernheim" ] }</br>
+<br>{ "_id" : "55595", "city" : [ "Allenfeld", "Bad Kreuznach - Rüdesheim", "Mandel", "Hargesheim", "Winterbach", "Spall", "Weinsheim", "Argenschwang", "Sommerloch", "Boos", "Bad Kreuznach", "Roxheim", "Bad Sobernheim", "Traisen" ] }</br>
+<br>{ "_id" : "55585", "city" : [ "Bad Kreuznach", "Altenbamberg", "Niederhausen" ] }</br>
+<br>{ "_id" : "55543", "city" : [ "Hargesheim", "Spall", "Rüdesheim", "Bad Kreuznach", "Bad Münster", "Bad Sobernheim", "Traisen", "Bad Sobernheim - Steinhard" ] }</br>
+<br>{ "_id" : "55545", "city" : [ "Winzenheim", "Rüdesheim", "Hargesheim", "Bad Sobernheim - Steinhard", "Bad Kreuznach" ] }</br>
+<br>{ "_id" : "55569", "city" : [ "Auen", "Monzingen" ] }</br>
+<br>{ "_id" : "55596", "city" : [ "Schloßböckelheim - Kolonie", "Oberstreit", "Waldböckelheim" ] }</br>
+<br>{ "_id" : "55546", "city" : [ "Fürfeld" ] }</br>
+<br>{ "_id" : "55452", "city" : [ "Norheim", "Guldental" ] }</br>
+<br>{ "_id" : "55593", "city" : [ "Staudernheim", "Rüdesheim" ] }</br>
+<br>{ "_id" : "67824", "city" : [ "Feilbingert" ] }</br>
+<br>{ "_id" : "55566", "city" : [ "Bad Sobernheim - Steinhardt", "Ippenschied", "Meddersheim", "Waldböckelheim", "Bad Sobernheim - Steinhard", "Daubach", "Bad Sobernheim", "Schloßböckelheim - Kolonie", "Bad Kreuznach" ] }</br>
+<br>{ "_id" : "55583", "city" : [ "Bad Sobernheim", "Bad Münster", "Bad Kreuznach - Rüdesheim", "Bad Münster am Stein - Ebernburg" ] }</br></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="n">eim_Germany</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([{</span><span class="s">&quot;$match&quot;</span><span class="p">:{</span><span class="s">&quot;address.postcode&quot;</span><span class="p">:{</span><span class="s">&quot;$exists&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}},{</span><span class="s">&quot;$group&quot;</span><span class="p">:{</span><span class="s">&quot;_id&quot;</span><span class="p">:</span><span class="s">&quot;$address.postcode&quot;</span><span class="p">,</span><span class="s">&quot;count&quot;</span><span class="p">:{</span><span class="s">&quot;$sum&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}},{</span><span class="s">&quot;$sort&quot;</span><span class="p">:{</span><span class="s">&quot;count&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Shaping-of-json-data-elements">Shaping of json data elements<a class="anchor-link" href="#Shaping-of-json-data-elements">&#182;</a></h3>
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
@@ -986,7 +993,194 @@ Main idead was to separate the 'contact:'-data in an own dictionary to reach eas
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Other-ideas-about-the-datasets">Other ideas about the datasets<a class="anchor-link" href="#Other-ideas-about-the-datasets">&#182;</a></h1>
+<h2 id="Statistical-Overview">Statistical Overview<a class="anchor-link" href="#Statistical-Overview">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This section contains basic statistics about the dataset and the MongoDB queries used to gather them.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Collection-size">Collection size<a class="anchor-link" href="#Collection-size">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">P3_Meddersheim_Germany_2</span><span class="o">.</span><span class="n">dataSize</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>61912037 bytes</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Number-of-documents-in-the-database-'DW_P3_OSM_after':">Number of documents in the database 'DW_P3_OSM_after':<a class="anchor-link" href="#Number-of-documents-in-the-database-'DW_P3_OSM_after':">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">P3_Meddersheim_Germany_2</span><span class="o">.</span><span class="n">find</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>255247</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Number-of-the-different-types-(nodes,-ways,-relations,-osm,-meta,-bounds,-note)-in-descending-order-sorted:">Number of the different types (nodes, ways, relations, osm, meta, bounds, note) in descending order sorted:<a class="anchor-link" href="#Number-of-the-different-types-(nodes,-ways,-relations,-osm,-meta,-bounds,-note)-in-descending-order-sorted:">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">P3_Meddersheim_Germany_2</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([{</span><span class="s">&quot;$group&quot;</span><span class="p">:{</span><span class="s">&quot;_id&quot;</span><span class="p">:</span><span class="s">&quot;$type&quot;</span><span class="p">,</span><span class="s">&quot;count&quot;</span><span class="p">:{</span><span class="s">&quot;$sum&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}},{</span><span class="s">&quot;$sort&quot;</span><span class="p">:{</span><span class="s">&quot;count&quot;</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">}}])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><br>{ "_id" : "node", "count" : 218983 }</br>
+<br>{ "_id" : "way", "count" : 35578 }</br>
+<br>{ "_id" : "relation", "count" : 682 }</br>
+<br>{ "_id" : "osm", "count" : 1 }</br>
+<br>{ "_id" : "meta", "count" : 1 }</br>
+<br>{ "_id" : "bounds", "count" : 1 }</br>
+<br>{ "_id" : "note", "count" : 1 }</br></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Number-of-unique-users-are:">Number of unique users are:<a class="anchor-link" href="#Number-of-unique-users-are:">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">P3_Meddersheim_Germany_2</span><span class="o">.</span><span class="n">distinct</span><span class="p">(</span><span class="s">&quot;created.uid&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">length</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>484</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Top-3-contributing-users-are:">Top 3 contributing users are:<a class="anchor-link" href="#Top-3-contributing-users-are:">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">P3_Meddersheim_Germany_2</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([{</span><span class="s">&quot;$group&quot;</span><span class="p">:{</span><span class="s">&quot;_id&quot;</span><span class="p">:</span><span class="s">&quot;$created.user&quot;</span><span class="p">,</span><span class="s">&quot;count&quot;</span><span class="p">:{</span><span class="s">&quot;$sum&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}},{</span><span class="s">&quot;$sort&quot;</span><span class="p">:{</span><span class="s">&quot;count&quot;</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">}},{</span><span class="s">&quot;$limit&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">}])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><br>{ "_id" : "poppei82", "count" : 65353 }</br>
+<br>{ "_id" : "paelzer", "count" : 40887 }</br>
+<br>{ "_id" : "chrisber", "count" : 31151 }</br></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Additional-queries">Additional queries<a class="anchor-link" href="#Additional-queries">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -996,13 +1190,656 @@ Main idead was to separate the 'contact:'-data in an own dictionary to reach eas
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <ol>
-<li>The field 'is_in' is available twice in the dictionary node and seems to contain the same data. The second time it is stored in node =&gt; openGeoDB =&gt; is_in dictionary and could be checked if those data are really the same compared to what is directly stored in node =&gt; is_in.</li>
-<li>Independent from the tag-type I re-shaped and exported the xml-data in json-format with encoding utf8 for reading german characters. The encoding for the Mongo DB is not yet implemented. But could be done later.</li>
-<li>The contact data could be grouped according to the 'amenity or shop'-type and contacted for services (e. g. winery services and equipment, vineyard or restaurants support, holiday and tourism service).</li>
+<li>Call query for getting wineries from OpenStreetMap-data</li>
+<li>Number of chosen types of nodes</li>
 </ol>
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="kn">import</span> <span class="nn">pprint</span>
+<span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">MongoClient</span>
+
+<span class="k">def</span> <span class="nf">get_db</span><span class="p">():</span>    
+    <span class="n">client</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="s">&#39;localhost&#39;</span><span class="p">,</span><span class="mi">27017</span><span class="p">)</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">client</span><span class="p">[</span><span class="s">&#39;test&#39;</span><span class="p">]</span>
+    <span class="n">coll</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">P3_Meddersheim_Germany</span>
+    <span class="k">return</span> <span class="n">db</span>
+
+<span class="c">#getting wineries </span>
+<span class="k">def</span> <span class="nf">range_query</span><span class="p">():</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;tag.shop&quot;</span><span class="p">:</span><span class="s">&quot;winery&quot;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">query</span>
+    
+<span class="c">#getting types of nodes  </span>
+<span class="k">def</span> <span class="nf">make_pipeline</span><span class="p">():</span>
+    <span class="n">pipeline</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c">#count types of nodes and get them</span>
+    <span class="n">pipeline</span> <span class="o">=</span> <span class="p">[{</span><span class="s">&quot;$match&quot;</span><span class="p">:{</span><span class="s">&quot;type&quot;</span><span class="p">:</span><span class="s">&quot;node&quot;</span><span class="p">,</span><span class="s">&quot;type&quot;</span><span class="p">:{</span><span class="s">&quot;$ne&quot;</span><span class="p">:</span><span class="bp">None</span><span class="p">},</span><span class="s">&quot;tag.amenity&quot;</span><span class="p">:{</span><span class="s">&quot;$ne&quot;</span><span class="p">:</span><span class="bp">None</span><span class="p">}}},</span>
+                <span class="p">{</span><span class="s">&quot;$group&quot;</span><span class="p">:{</span><span class="s">&quot;_id&quot;</span><span class="p">:</span><span class="s">&quot;$tag.amenity&quot;</span><span class="p">,</span><span class="s">&quot;count&quot;</span><span class="p">:{</span><span class="s">&quot;$sum&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}},</span>
+                <span class="p">{</span><span class="s">&quot;$sort&quot;</span><span class="p">:{</span><span class="s">&quot;count&quot;</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">}}]</span>
+    <span class="c">#alternative pipeline for checking which type is the right one</span>
+    <span class="c">#pipeline = [{&quot;$match&quot;:{&quot;openGeoDB.type&quot;:{&quot;$ne&quot;:None}}},</span>
+    <span class="c">#            {&quot;$group&quot;:{&quot;_id&quot;:&quot;$openGeoDB.type&quot;,&quot;count&quot;:{&quot;$sum&quot;:1}}},</span>
+    <span class="c">#            {&quot;$sort&quot;:{&quot;count&quot;:-1}}]</span>
+    <span class="c">#print pipeline</span>
+    <span class="k">return</span> <span class="n">pipeline</span>
+
+<span class="k">def</span> <span class="nf">osm_sources</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">doc</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">db</span><span class="o">.</span><span class="n">P3_Meddersheim_Germany</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">pipeline</span><span class="p">)]</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c">#read_file(street_map_file)</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">get_db</span><span class="p">()</span>
+    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">()</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="n">range_query</span><span class="p">()</span>
+    <span class="n">result_id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">P3_Meddersheim_Germany</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">osm_sources</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">result_id</span><span class="p">:</span>
+        <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>{u&apos;_id&apos;: ObjectId(&apos;5686ecf1cf4e09e2ffdb0808&apos;),
+ u&apos;address&apos;: {u&apos;city&apos;: u&apos;Monzingen&apos;,
+              u&apos;country&apos;: u&apos;DE&apos;,
+              u&apos;housenumber&apos;: u&apos;23&apos;,
+              u&apos;postcode&apos;: u&apos;55569&apos;,
+              u&apos;street&apos;: u&apos;Soonwaldstra\xdfe&apos;},
+ u&apos;contact&apos;: {u&apos;fax&apos;: u&apos;+49 6751 94705&apos;, u&apos;phone&apos;: u&apos;+49 6751 3847&apos;},
+ u&apos;created&apos;: {u&apos;changeset&apos;: u&apos;13478987&apos;,
+              u&apos;timestamp&apos;: u&apos;2012-10-13T13:23:36Z&apos;,
+              u&apos;uid&apos;: u&apos;39424&apos;,
+              u&apos;user&apos;: u&apos;atressel&apos;,
+              u&apos;version&apos;: u&apos;7&apos;},
+ u&apos;id&apos;: u&apos;385151392&apos;,
+ u&apos;pos&apos;: [49.8019191, 7.5910752],
+ u&apos;tag&apos;: {u&apos;landuse&apos;: u&apos;farmyard&apos;,
+          u&apos;name&apos;: u&apos;Weingut Jaeger&apos;,
+          u&apos;shop&apos;: u&apos;winery&apos;,
+          u&apos;tourism&apos;: u&apos;wine_cellar&apos;},
+ u&apos;type&apos;: u&apos;node&apos;}
+{u&apos;_id&apos;: ObjectId(&apos;5686ecf1cf4e09e2ffdb2fa2&apos;),
+ u&apos;created&apos;: {u&apos;changeset&apos;: u&apos;4214878&apos;,
+              u&apos;timestamp&apos;: u&apos;2010-03-23T18:51:38Z&apos;,
+              u&apos;uid&apos;: u&apos;234214&apos;,
+              u&apos;user&apos;: u&apos;Anubis85&apos;,
+              u&apos;version&apos;: u&apos;1&apos;},
+ u&apos;id&apos;: u&apos;672850551&apos;,
+ u&apos;pos&apos;: [49.8228991, 7.8193516],
+ u&apos;tag&apos;: {u&apos;name&apos;: u&apos;Weingut Pleitz&apos;,
+          u&apos;shop&apos;: u&apos;winery&apos;,
+          u&apos;tourism&apos;: u&apos;wine_cellar&apos;},
+ u&apos;type&apos;: u&apos;node&apos;}
+{u&apos;_id&apos;: ObjectId(&apos;5686ecf2cf4e09e2ffdb4416&apos;),
+ u&apos;address&apos;: {u&apos;city&apos;: u&apos;Monzingen&apos;,
+              u&apos;country&apos;: u&apos;DE&apos;,
+              u&apos;housenumber&apos;: u&apos;12&apos;,
+              u&apos;postcode&apos;: u&apos;55569&apos;,
+              u&apos;street&apos;: u&apos;R\xf6merstra\xdfe&apos;},
+ u&apos;contact&apos;: {u&apos;email&apos;: u&apos;weingut-schauss@web.de&apos;,
+              u&apos;fax&apos;: u&apos;+49 6751 6860&apos;,
+              u&apos;phone&apos;: u&apos;+49 6751 2882&apos;,
+              u&apos;website&apos;: u&apos;http://www.weingut-schauss.de&apos;},
+ u&apos;created&apos;: {u&apos;changeset&apos;: u&apos;13478827&apos;,
+              u&apos;timestamp&apos;: u&apos;2012-10-13T13:08:53Z&apos;,
+              u&apos;uid&apos;: u&apos;39424&apos;,
+              u&apos;user&apos;: u&apos;atressel&apos;,
+              u&apos;version&apos;: u&apos;6&apos;},
+ u&apos;id&apos;: u&apos;835588154&apos;,
+ u&apos;pos&apos;: [49.8011835, 7.5894586],
+ u&apos;tag&apos;: {u&apos;landuse&apos;: u&apos;farmyard&apos;,
+          u&apos;name&apos;: u&apos;Weingut Schau\xdf&apos;,
+          u&apos;shop&apos;: u&apos;winery&apos;,
+          u&apos;tourism&apos;: u&apos;wine_cellar&apos;},
+ u&apos;type&apos;: u&apos;node&apos;}
+{u&apos;_id&apos;: ObjectId(&apos;5686ecf4cf4e09e2ffdc0b0b&apos;),
+ u&apos;address&apos;: {u&apos;city&apos;: u&apos;Monzingen&apos;,
+              u&apos;country&apos;: u&apos;DE&apos;,
+              u&apos;housename&apos;: u&apos;Living Room&apos;,
+              u&apos;housenumber&apos;: u&apos;10a&apos;,
+              u&apos;postcode&apos;: u&apos;55569&apos;,
+              u&apos;street&apos;: u&apos;Soonwaldstra\xdfe&apos;},
+ u&apos;contact&apos;: {u&apos;email&apos;: u&apos;weingut@emrich-schoenleber.com&apos;,
+              u&apos;fax&apos;: u&apos;+49 6751 4864&apos;,
+              u&apos;phone&apos;: u&apos;+49 6751 2733&apos;,
+              u&apos;website&apos;: u&apos;http://www.emrich-schoenleber.de&apos;},
+ u&apos;created&apos;: {u&apos;changeset&apos;: u&apos;13478827&apos;,
+              u&apos;timestamp&apos;: u&apos;2012-10-13T13:08:52Z&apos;,
+              u&apos;uid&apos;: u&apos;39424&apos;,
+              u&apos;user&apos;: u&apos;atressel&apos;,
+              u&apos;version&apos;: u&apos;5&apos;},
+ u&apos;id&apos;: u&apos;1415935208&apos;,
+ u&apos;pos&apos;: [49.7969803, 7.5899494],
+ u&apos;tag&apos;: {u&apos;landuse&apos;: u&apos;farmyard&apos;,
+          u&apos;name&apos;: u&apos;Weingut Emrich-Sch\xf6nleber&apos;,
+          u&apos;shop&apos;: u&apos;winery&apos;,
+          u&apos;tourism&apos;: u&apos;wine_cellar&apos;},
+ u&apos;type&apos;: u&apos;node&apos;}
+{u&apos;_id&apos;: ObjectId(&apos;5686ecf4cf4e09e2ffdc0b0c&apos;),
+ u&apos;address&apos;: {u&apos;city&apos;: u&apos;Monzingen&apos;,
+              u&apos;country&apos;: u&apos;DE&apos;,
+              u&apos;housename&apos;: u&apos;Living Room&apos;,
+              u&apos;housenumber&apos;: u&apos;34&apos;,
+              u&apos;postcode&apos;: u&apos;55569&apos;,
+              u&apos;street&apos;: u&apos;Soonwaldstra\xdfe&apos;},
+ u&apos;contact&apos;: {u&apos;email&apos;: u&apos;weingut.heinrich@t-online.de&apos;,
+              u&apos;fax&apos;: u&apos;+49 6751 950731&apos;,
+              u&apos;phone&apos;: u&apos;+49 6751 2151&apos;,
+              u&apos;website&apos;: u&apos;http://www.weingutheinrich.de&apos;},
+ u&apos;created&apos;: {u&apos;changeset&apos;: u&apos;13478987&apos;,
+              u&apos;timestamp&apos;: u&apos;2012-10-13T13:23:36Z&apos;,
+              u&apos;uid&apos;: u&apos;39424&apos;,
+              u&apos;user&apos;: u&apos;atressel&apos;,
+              u&apos;version&apos;: u&apos;4&apos;},
+ u&apos;id&apos;: u&apos;1415935210&apos;,
+ u&apos;pos&apos;: [49.8032976, 7.5904476],
+ u&apos;tag&apos;: {u&apos;landuse&apos;: u&apos;farmyard&apos;,
+          u&apos;name&apos;: u&apos;Weingut Heinrich&apos;,
+          u&apos;shop&apos;: u&apos;winery&apos;,
+          u&apos;tourism&apos;: u&apos;wine_cellar&apos;},
+ u&apos;type&apos;: u&apos;node&apos;}
+{u&apos;_id&apos;: ObjectId(&apos;5686ecf4cf4e09e2ffdc0b0d&apos;),
+ u&apos;address&apos;: {u&apos;city&apos;: u&apos;Monzingen&apos;,
+              u&apos;country&apos;: u&apos;DE&apos;,
+              u&apos;housename&apos;: u&apos;Living Room&apos;,
+              u&apos;housenumber&apos;: u&apos;41&apos;,
+              u&apos;postcode&apos;: u&apos;55569&apos;,
+              u&apos;street&apos;: u&apos;Soonwaldstra\xdfe&apos;},
+ u&apos;contact&apos;: {u&apos;email&apos;: u&apos;info@weingut-udo-weber.de&apos;,
+              u&apos;fax&apos;: u&apos;+49 6751 2076&apos;,
+              u&apos;phone&apos;: u&apos;+49 6751 3278&apos;,
+              u&apos;website&apos;: u&apos;http://www.weingut-udo-weber.de&apos;},
+ u&apos;created&apos;: {u&apos;changeset&apos;: u&apos;13478987&apos;,
+              u&apos;timestamp&apos;: u&apos;2012-10-13T13:23:36Z&apos;,
+              u&apos;uid&apos;: u&apos;39424&apos;,
+              u&apos;user&apos;: u&apos;atressel&apos;,
+              u&apos;version&apos;: u&apos;5&apos;},
+ u&apos;id&apos;: u&apos;1415935217&apos;,
+ u&apos;pos&apos;: [49.803987, 7.5891891],
+ u&apos;tag&apos;: {u&apos;landuse&apos;: u&apos;farmyard&apos;,
+          u&apos;name&apos;: u&apos;Weingut Weber&apos;,
+          u&apos;shop&apos;: u&apos;winery&apos;,
+          u&apos;tourism&apos;: u&apos;wine_cellar&apos;},
+ u&apos;type&apos;: u&apos;node&apos;}
+{u&apos;_id&apos;: ObjectId(&apos;5686ecf4cf4e09e2ffdc0c2b&apos;),
+ u&apos;address&apos;: {u&apos;city&apos;: u&apos;Monzingen&apos;,
+              u&apos;country&apos;: u&apos;DE&apos;,
+              u&apos;housename&apos;: u&apos;Living Room&apos;,
+              u&apos;housenumber&apos;: u&apos;67&apos;,
+              u&apos;postcode&apos;: u&apos;55569&apos;,
+              u&apos;street&apos;: u&apos;Hauptstra\xdfe&apos;},
+ u&apos;contact&apos;: {u&apos;email&apos;: u&apos;info@weingut-alt.de&apos;,
+              u&apos;phone&apos;: u&apos;+49 6751 94560&apos;,
+              u&apos;website&apos;: u&apos;www.weingut-alt.de&apos;},
+ u&apos;created&apos;: {u&apos;changeset&apos;: u&apos;16517308&apos;,
+              u&apos;timestamp&apos;: u&apos;2013-06-11T23:06:44Z&apos;,
+              u&apos;uid&apos;: u&apos;461945&apos;,
+              u&apos;user&apos;: u&apos;poppei82&apos;,
+              u&apos;version&apos;: u&apos;6&apos;},
+ u&apos;id&apos;: u&apos;1426340194&apos;,
+ u&apos;pos&apos;: [49.8004004, 7.5912087],
+ u&apos;tag&apos;: {u&apos;landuse&apos;: u&apos;farmyard&apos;,
+          u&apos;name&apos;: u&apos;Weingut Alt&apos;,
+          u&apos;shop&apos;: u&apos;winery&apos;,
+          u&apos;tourism&apos;: u&apos;attraction&apos;},
+ u&apos;type&apos;: u&apos;node&apos;}
+{u&apos;_id&apos;: ObjectId(&apos;5686ecffcf4e09e2ffde163e&apos;),
+ u&apos;created&apos;: {u&apos;changeset&apos;: u&apos;33053769&apos;,
+              u&apos;timestamp&apos;: u&apos;2015-08-02T18:16:35Z&apos;,
+              u&apos;uid&apos;: u&apos;104912&apos;,
+              u&apos;user&apos;: u&apos;Sir Lancelot&apos;,
+              u&apos;version&apos;: u&apos;1&apos;},
+ u&apos;id&apos;: u&apos;3677884318&apos;,
+ u&apos;pos&apos;: [49.865314, 7.810936],
+ u&apos;tag&apos;: {u&apos;amenity&apos;: u&apos;pub&apos;, u&apos;name&apos;: u&apos;Weingut Heil&apos;, u&apos;shop&apos;: u&apos;winery&apos;},
+ u&apos;type&apos;: u&apos;node&apos;}
+[{u&apos;_id&apos;: u&apos;bench&apos;, u&apos;count&apos;: 556},
+ {u&apos;_id&apos;: u&apos;parking&apos;, u&apos;count&apos;: 405},
+ {u&apos;_id&apos;: u&apos;restaurant&apos;, u&apos;count&apos;: 122},
+ {u&apos;_id&apos;: u&apos;hunting_stand&apos;, u&apos;count&apos;: 101},
+ {u&apos;_id&apos;: u&apos;place_of_worship&apos;, u&apos;count&apos;: 98},
+ {u&apos;_id&apos;: u&apos;recycling&apos;, u&apos;count&apos;: 59},
+ {u&apos;_id&apos;: u&apos;shelter&apos;, u&apos;count&apos;: 55},
+ {u&apos;_id&apos;: u&apos;school&apos;, u&apos;count&apos;: 54},
+ {u&apos;_id&apos;: u&apos;post_box&apos;, u&apos;count&apos;: 51},
+ {u&apos;_id&apos;: u&apos;bank&apos;, u&apos;count&apos;: 45},
+ {u&apos;_id&apos;: u&apos;kindergarten&apos;, u&apos;count&apos;: 33},
+ {u&apos;_id&apos;: u&apos;fountain&apos;, u&apos;count&apos;: 30},
+ {u&apos;_id&apos;: u&apos;telephone&apos;, u&apos;count&apos;: 28},
+ {u&apos;_id&apos;: u&apos;fast_food&apos;, u&apos;count&apos;: 27},
+ {u&apos;_id&apos;: u&apos;pub&apos;, u&apos;count&apos;: 27},
+ {u&apos;_id&apos;: u&apos;cafe&apos;, u&apos;count&apos;: 27},
+ {u&apos;_id&apos;: u&apos;fire_station&apos;, u&apos;count&apos;: 25},
+ {u&apos;_id&apos;: u&apos;doctors&apos;, u&apos;count&apos;: 23},
+ {u&apos;_id&apos;: u&apos;pharmacy&apos;, u&apos;count&apos;: 20},
+ {u&apos;_id&apos;: u&apos;fuel&apos;, u&apos;count&apos;: 20},
+ {u&apos;_id&apos;: u&apos;toilets&apos;, u&apos;count&apos;: 19},
+ {u&apos;_id&apos;: u&apos;townhall&apos;, u&apos;count&apos;: 19},
+ {u&apos;_id&apos;: u&apos;grave_yard&apos;, u&apos;count&apos;: 18},
+ {u&apos;_id&apos;: u&apos;community_centre&apos;, u&apos;count&apos;: 18},
+ {u&apos;_id&apos;: u&apos;social_facility&apos;, u&apos;count&apos;: 15},
+ {u&apos;_id&apos;: u&apos;bbq&apos;, u&apos;count&apos;: 14},
+ {u&apos;_id&apos;: u&apos;public_building&apos;, u&apos;count&apos;: 11},
+ {u&apos;_id&apos;: u&apos;hospital&apos;, u&apos;count&apos;: 10},
+ {u&apos;_id&apos;: u&apos;vending_machine&apos;, u&apos;count&apos;: 10},
+ {u&apos;_id&apos;: u&apos;dentist&apos;, u&apos;count&apos;: 9},
+ {u&apos;_id&apos;: u&apos;post_office&apos;, u&apos;count&apos;: 9},
+ {u&apos;_id&apos;: u&apos;car_wash&apos;, u&apos;count&apos;: 8},
+ {u&apos;_id&apos;: u&apos;atm&apos;, u&apos;count&apos;: 8},
+ {u&apos;_id&apos;: u&apos;veterinary&apos;, u&apos;count&apos;: 7},
+ {u&apos;_id&apos;: u&apos;bar&apos;, u&apos;count&apos;: 7},
+ {u&apos;_id&apos;: u&apos;biergarten&apos;, u&apos;count&apos;: 7},
+ {u&apos;_id&apos;: u&apos;swimming_pool&apos;, u&apos;count&apos;: 6},
+ {u&apos;_id&apos;: u&apos;bicycle_parking&apos;, u&apos;count&apos;: 6},
+ {u&apos;_id&apos;: u&apos;grit_bin&apos;, u&apos;count&apos;: 5},
+ {u&apos;_id&apos;: u&apos;arts_centre&apos;, u&apos;count&apos;: 4},
+ {u&apos;_id&apos;: u&apos;bus_station&apos;, u&apos;count&apos;: 3},
+ {u&apos;_id&apos;: u&apos;courthouse&apos;, u&apos;count&apos;: 3},
+ {u&apos;_id&apos;: u&apos;police&apos;, u&apos;count&apos;: 3},
+ {u&apos;_id&apos;: u&apos;driving_school&apos;, u&apos;count&apos;: 3},
+ {u&apos;_id&apos;: u&apos;library&apos;, u&apos;count&apos;: 3},
+ {u&apos;_id&apos;: u&apos;waste_disposal&apos;, u&apos;count&apos;: 3},
+ {u&apos;_id&apos;: u&apos;ferry_terminal&apos;, u&apos;count&apos;: 2},
+ {u&apos;_id&apos;: u&apos;casino&apos;, u&apos;count&apos;: 2},
+ {u&apos;_id&apos;: u&apos;clock&apos;, u&apos;count&apos;: 2},
+ {u&apos;_id&apos;: u&apos;food_court&apos;, u&apos;count&apos;: 2},
+ {u&apos;_id&apos;: u&apos;drinking_water&apos;, u&apos;count&apos;: 2},
+ {u&apos;_id&apos;: u&apos;taxi&apos;, u&apos;count&apos;: 2},
+ {u&apos;_id&apos;: u&apos;nursing_home&apos;, u&apos;count&apos;: 1},
+ {u&apos;_id&apos;: u&apos;nightclub&apos;, u&apos;count&apos;: 1},
+ {u&apos;_id&apos;: u&apos;community_center&apos;, u&apos;count&apos;: 1},
+ {u&apos;_id&apos;: u&apos;sanitary_dump_station&apos;, u&apos;count&apos;: 1},
+ {u&apos;_id&apos;: u&apos;baby_hatch&apos;, u&apos;count&apos;: 1},
+ {u&apos;_id&apos;: u&apos;marketplace&apos;, u&apos;count&apos;: 1},
+ {u&apos;_id&apos;: u&apos;bureau_de_change&apos;, u&apos;count&apos;: 1},
+ {u&apos;_id&apos;: u&apos;cinema&apos;, u&apos;count&apos;: 1},
+ {u&apos;_id&apos;: u&apos;emergency_service&apos;, u&apos;count&apos;: 1},
+ {u&apos;_id&apos;: u&apos;waste_basket&apos;, u&apos;count&apos;: 1},
+ {u&apos;_id&apos;: u&apos;car_rental&apos;, u&apos;count&apos;: 1},
+ {u&apos;_id&apos;: u&apos;theatre&apos;, u&apos;count&apos;: 1},
+ {u&apos;_id&apos;: u&apos;blood_donation&apos;, u&apos;count&apos;: 1},
+ {u&apos;_id&apos;: u&apos;charging_station&apos;, u&apos;count&apos;: 1},
+ {u&apos;_id&apos;: u&apos;ambulance_station&apos;, u&apos;count&apos;: 1},
+ {u&apos;_id&apos;: u&apos;rescue_station&apos;, u&apos;count&apos;: 1},
+ {u&apos;_id&apos;: u&apos;studio&apos;, u&apos;count&apos;: 1},
+ {u&apos;_id&apos;: u&apos;parking_space&apos;, u&apos;count&apos;: 1},
+ {u&apos;_id&apos;: u&apos;animal_shelter&apos;, u&apos;count&apos;: 1},
+ {u&apos;_id&apos;: u&apos;brothel&apos;, u&apos;count&apos;: 1},
+ {u&apos;_id&apos;: u&apos;winery&apos;, u&apos;count&apos;: 1}]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Other-ideas-about-the-datasets">Other ideas about the datasets<a class="anchor-link" href="#Other-ideas-about-the-datasets">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The field 'is_in' is available twice in the dictionary node and seems to contain the same data. The second time it is stored in node =&gt; openGeoDB =&gt; is_in dictionary and could be checked if those data are really the same compared to what is directly stored in node =&gt; is_in.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The contact data could be grouped according to the 'amenity or shop'-type and contacted for services (e. g. winery services and equipment, vineyard or restaurants support, holiday and tourism service).</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Further spelling mistakes can be resolved (e. g. { "_id" : "Bad Sobernheim - Steinhard" }).</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The population is described in two elements within 'node': "tag.population" and "openGeoDB.population". This redundant information can be reduced to a single source of information. For checking the size of population and where the most of the people live in this region the data should be available as integer values and not strings.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Additionally the postal codes are available in in the 'openGeoDB.postal_codes' section beside 'address.postcode'. This could be reduced to one field or a pattern might be identified for matching the area code with the zip code. Also an alignment of zip codes with area codes for increasing the efficiency in e. g. glass fibre installation or digitalisation of the postal service via localization with a uniform id usage might be worth for research.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">P3_Meddersheim_Germany_2</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([{</span><span class="s">&quot;$match&quot;</span><span class="p">:{</span><span class="s">&quot;openGeoDB.postal_codes&quot;</span><span class="p">:{</span><span class="s">&quot;$exists&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}},{</span><span class="s">&quot;$project&quot;</span><span class="p">:{</span><span class="s">&quot;_id&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s">&quot;openGeoDB.postal_codes&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s">&quot;openGeoDB.telephone_area_code&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}},{</span><span class="s">&quot;$group&quot;</span><span class="p">:{</span><span class="s">&quot;_id&quot;</span><span class="p">:</span><span class="s">&quot;$openGeoDB.telephone_area_code&quot;</span><span class="p">,</span><span class="s">&quot;postcode&quot;</span><span class="p">:{</span><span class="s">&quot;$addToSet&quot;</span><span class="p">:</span><span class="s">&quot;$openGeoDB.postal_codes&quot;</span><span class="p">},</span><span class="s">&quot;count&quot;</span><span class="p">:{</span><span class="s">&quot;$sum&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}},{</span><span class="s">&quot;$sort&quot;</span><span class="p">:{</span><span class="s">&quot;count&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><br>{ "_id" : "06754", "postcode" : [ "55569" ], "count" : 1 }</br>
+<br>{ "_id" : "06755", "postcode" : [ "55571" ], "count" : 1 }</br>
+<br>{ "_id" : "06362", "postcode" : [ "67826" ], "count" : 1 }</br>
+<br>{ "_id" : "06756", "postcode" : [ "55595" ], "count" : 2 }</br>
+<br>{ "_id" : "06758", "postcode" : [ "55596" ], "count" : 5 }</br>
+<br>{ "_id" : "06708", "postcode" : [ "55583", "55585", "55595" ], "count" : 6 }</br>
+<br>{ "_id" : "06751", "postcode" : [ "55568", "55569", "55595", "55566" ], "count" : 7 }</br>
+<br>{ "_id" : "0671", "postcode" : [ "55546", "55593", "55595", "55545,55543" ], "count" : 16 }</br></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Additional-data-exploration-using-MongoDB-queries">Additional data exploration using MongoDB queries<a class="anchor-link" href="#Additional-data-exploration-using-MongoDB-queries">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Localization of locations with highest population - the source of these data might be questionable for checking correctness and usage as a reliable source for concentration of population (e. g. checking amount of people living per qm).</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">P3_Meddersheim_Germany_2</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([{</span><span class="s">&quot;$match&quot;</span><span class="p">:{</span><span class="s">&quot;openGeoDB.name&quot;</span><span class="p">:{</span><span class="s">&quot;$exists&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}},{</span><span class="s">&quot;$project&quot;</span><span class="p">:{</span><span class="s">&quot;_id&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s">&quot;openGeoDB.name&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s">&quot;openGeoDB.population&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}},{</span><span class="s">&quot;$sort&quot;</span><span class="p">:{</span><span class="s">&quot;population&quot;</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">}}])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><br>...</br>
+<br>{ "openGeoDB" : { "name" : "Hargesheim", "population" : "2890" } }</br>
+<br>{ "openGeoDB" : { "name" : "Braunweiler", "population" : "616" } }</br>
+<br>...</br></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Available recycling types in the region e. g. for identification what is missing in this region and why</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">P3_Meddersheim_Germany_2</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([{</span><span class="s">&quot;$match&quot;</span><span class="p">:{</span><span class="s">&quot;tag.recycling_type&quot;</span><span class="p">:{</span><span class="s">&quot;$exists&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}},{</span><span class="s">&quot;$group&quot;</span><span class="p">:{</span><span class="s">&quot;_id&quot;</span><span class="p">:</span><span class="s">&quot;$tag.recycling_type&quot;</span><span class="p">,</span><span class="s">&quot;count&quot;</span><span class="p">:{</span><span class="s">&quot;$sum&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}},{</span><span class="s">&quot;$sort&quot;</span><span class="p">:{</span><span class="s">&quot;count&quot;</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">}}])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><br>{ "_id" : "container", "count" : 32 }</br>
+<br>{ "_id" : "centre", "count" : 2 }</br></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Available recycling groups - checking for regrouping and types of recycle stuff. Additional data like frequency of bringing stuff to these places supports the frequency of emptying the containers and transport the recycle things to the recycle centres. The scheduling for the waste management can be optimized and e. g. set in relation to population close to recycling places.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="o">&gt;</span> <span class="n">db</span><span class="o">.</span><span class="n">P3_Meddersheim_Germany_2</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([{</span><span class="s">&quot;$match&quot;</span><span class="p">:{</span><span class="s">&quot;tag.recycling_type&quot;</span><span class="p">:{</span><span class="s">&quot;$exists&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}},{</span><span class="s">&quot;$group&quot;</span><span class="p">:{</span><span class="s">&quot;_id&quot;</span><span class="p">:</span><span class="s">&quot;$tag.recycling_type&quot;</span><span class="p">,</span><span class="s">&quot;type&quot;</span><span class="p">:{</span><span class="s">&quot;$addToSet&quot;</span><span class="p">:</span><span class="s">&quot;$recycling&quot;</span><span class="p">},</span><span class="s">&quot;count&quot;</span><span class="p">:{</span><span class="s">&quot;$sum&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}},{</span><span class="s">&quot;$sort&quot;</span><span class="p">:{</span><span class="s">&quot;count&quot;</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">}}])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>{ "_id" : "container", "type" : [ { "green_waste" : "no", "cartons" : "no", "small_appliances" : "no", "plastic_bottles" : "no", "wood" : "no", "plastic_packaging" : "no", "scrap_metal" : "no", "glass_bottles" : "no", "plastic" : "no", "paper" : "no", "glass" : "no", "batteries" : "no", "books" : "no", "magazines" : "no", "cans" : "no", "newspaper" : "no", "waste" : "no", "cardboard" : "no", "electrical_appliances" : "no", "paper_packaging" : "no", "clothes" : "yes" }, { "green_waste" : "no", "cartons" : "no", "small_appliances" : "no", "plastic_bottles" : "no", "wood" : "no", "scrap_metal" : "no", "glass_bottles" : "yes", "plastic" : "no", "paper" : "no", "glass" : "yes", "batteries" : "no", "books" : "no", "magazines" : "no", "cans" : "no", "newspaper" : "no", "waste" : "no", "cardboard" : "no", "electrical_appliances" : "no", "paper_packaging" : "no", "plastic_packaging" : "no" }, { "glass_bottles" : "no", "clothes" : "yes" }, { "clothes" : "yes" }, { "glass" : "no", "glass_bottles" : "yes", "clothes" : "yes" }, { "glass_bottles" : "yes", "clothes" : "yes" }, { "glass_bottles" : "yes", "clothes" : "no" }, { "glass" : "yes" }, { "glass" : "yes", "clothes" : "no" }, { "glass_bottles" : "yes" }, { "glass" : "yes", "clothes" : "yes" } ], "count" : 32 }
+{ "_id" : "centre", "type" : [ { "garden_waste" : "yes" } ], "count" : 2 }</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The dataset provides a lot of useful information in different directions (e. g. wineries, population, position information, recycling and so on). The dataset is cleaned a bit for this exercise. But further cleaning is obviously necessary. Also a checking of the data quality and entering additional information (e. g. about wineries) is worth it t provide additionally to OpenStreetMap.org.
+The amount of user entries is not that high. A connection with social media (e. g. facebook) or wine related media (e. g. vivino.de) provides an increase in user entriese because a a lot of events and locations are wine related and published via these media. Also the quality about wine related information might be  improved by using other media s input.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Appendix">Appendix<a class="anchor-link" href="#Appendix">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Statistical-Overview-without-MongoDB-Queries">Statistical Overview without MongoDB Queries<a class="anchor-link" href="#Statistical-Overview-without-MongoDB-Queries">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>0.1 Size of original file
+0.2 Size of json-file</p>
+<ol>
+<li>Number of nodes, ways and other data</li>
+<li>Number of unique users </li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+<span class="c"># get original file size from exported file &quot;Meddersheim_Bad-Muenster_Bad-Kreuznach_original&quot;</span>
+<span class="c"># get number of data tags from exported file &quot;Meddersheim_Bad-Muenster_Bad-Kreuznach_original&quot;</span>
+<span class="c"># get number of unique users for this dataset</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Created on Dec 6, 2015</span>
+
+<span class="sd">@author: anita</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="kn">as</span> <span class="nn">ET</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">pprint</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">stat</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">street_map_file</span> <span class="o">=</span> <span class="s">&quot;Meddersheim_Bad-Muenster_Bad-Kreuznach_original&quot;</span>
+<span class="n">add_address</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">CREATED</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;version&quot;</span><span class="p">,</span> <span class="s">&quot;changeset&quot;</span><span class="p">,</span> <span class="s">&quot;timestamp&quot;</span><span class="p">,</span> <span class="s">&quot;user&quot;</span><span class="p">,</span> <span class="s">&quot;uid&quot;</span><span class="p">]</span>
+<span class="n">i</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">def</span> <span class="nf">read_file</span><span class="p">(</span><span class="n">street_map_file</span><span class="p">):</span>
+    <span class="n">json_data_array</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">dic_tag</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">file_orig</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">street_map_file</span><span class="p">)</span> <span class="c">#get statistical information from dataset</span>
+    <span class="n">file_orig_size</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">file_orig</span><span class="o">.</span><span class="n">st_size</span><span class="p">)</span> <span class="c">#get file size</span>
+    <span class="k">for</span> <span class="n">event</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">ET</span><span class="o">.</span><span class="n">iterparse</span><span class="p">(</span><span class="n">street_map_file</span><span class="p">):</span>
+        <span class="c"># get user IDs</span>
+        <span class="n">uid</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;uid&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">uid</span> <span class="o">!=</span><span class="bp">None</span><span class="p">:</span>
+            <span class="n">users</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">uid</span><span class="p">)</span>
+        <span class="c"># count xml-tags</span>
+        <span class="k">if</span> <span class="n">dic_tag</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">tag</span><span class="p">):</span>
+            <span class="n">dic_tag</span><span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="n">dic_tag</span><span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dic_tag</span><span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">users</span><span class="p">)</span>
+    <span class="n">file_json</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="s">&quot;P3_Meddersheim_Germany&quot;</span><span class="p">)</span> <span class="c">#get statistical information from dataset</span>
+    <span class="n">file_size</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">file_json</span><span class="o">.</span><span class="n">st_size</span><span class="p">)</span> <span class="c">#get file size</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="s">&quot;0.1 Size of original file from OSM [MB]:&quot;</span><span class="p">)</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">file_orig_size</span><span class="o">/</span><span class="mi">1000000</span><span class="p">)</span> <span class="c">#get size of the original file in [MB]</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="s">&quot;0.2 Size of json file from OSM [MB]:&quot;</span><span class="p">)</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">file_size</span><span class="o">/</span><span class="mi">1000000</span><span class="p">)</span> <span class="c">#get size of the original file in [MB]</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="s">&quot;1. Number of nodes, ways and other data:&quot;</span><span class="p">)</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">dic_tag</span><span class="p">)</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="s">&quot;2. Number if unique users:&quot;</span><span class="p">)</span>
+    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">dic_tag</span><span class="p">,</span> <span class="n">users</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">read_file</span><span class="p">(</span><span class="n">street_map_file</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>&apos;0.1 Size of original file from OSM [MB]:&apos;
+50.786579
+&apos;0.2 Size of json file from OSM [MB]:&apos;
+72.502022
+&apos;1. Number of nodes, ways and other data:&apos;
+{&apos;bounds&apos;: 1,
+ &apos;member&apos;: 24704,
+ &apos;meta&apos;: 1,
+ &apos;nd&apos;: 291833,
+ &apos;node&apos;: 218983,
+ &apos;note&apos;: 1,
+ &apos;osm&apos;: 1,
+ &apos;relation&apos;: 682,
+ &apos;tag&apos;: 94015,
+ &apos;way&apos;: 35578}
+&apos;2. Number if unique users:&apos;
+484
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
     </div>
   </div>
